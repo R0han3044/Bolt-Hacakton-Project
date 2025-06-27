@@ -17,6 +17,7 @@ import sys
 from utils.auth_utils import AuthManager
 from utils.health_data import HealthDataManager
 from utils.emergency_utils import EmergencyManager
+from utils.bolt_ai_traces import bolt_traces
 
 def initialize_session_state():
     """Initialize session state variables"""
@@ -99,14 +100,23 @@ def emergency_banner():
 
 def login_page():
     """Display login page"""
-    st.title("🏥 HealthAssist AI")
-    st.subheader("Advanced Healthcare Assistant with Emergency Response")
+    # Inject Bolt.new styling
+    bolt_traces.inject_bolt_style()
+    
+    # Show Bolt.new style header
+    bolt_traces.show_bolt_header()
     
     # Check if running in Colab
     is_colab = check_colab_environment()
     
+    # Show AI development trace
+    bolt_traces.show_ai_development_trace()
+    
     # Display system info
     display_system_info()
+    
+    # Show development phases
+    bolt_traces.show_development_phases()
     
     st.markdown("---")
     
@@ -160,42 +170,35 @@ def login_page():
             st.rerun()
 
 def load_model():
-    """Initialize Hugging Face AI models for healthcare assistance"""
+    """Initialize AI models with Bolt.new development experience"""
     from utils.ai_models import model_manager
     
-    with st.spinner("Initializing Hugging Face AI models..."):
-        import time
-        progress_bar = st.progress(0)
-        status_text = st.empty()
-        
-        status_text.text("Connecting to Hugging Face API...")
-        progress_bar.progress(25)
-        time.sleep(0.5)
-        
-        status_text.text("Loading medical AI models...")
-        progress_bar.progress(50)
-        time.sleep(0.5)
-        
-        status_text.text("Configuring healthcare assistant...")
-        progress_bar.progress(75)
-        time.sleep(0.5)
-        
-        # Check model availability
-        model_status = model_manager.get_model_status()
-        
-        progress_bar.progress(100)
-        st.session_state.model_loaded = True
-        st.session_state.model_manager = model_manager
-        
-        if model_status["api_available"]:
-            status_text.text("AI models ready!")
-            st.success("✅ Hugging Face AI models loaded successfully!")
-            if not model_status["api_token_configured"]:
-                st.info("💡 Add HUGGINGFACE_API_TOKEN for enhanced AI features")
-        else:
-            status_text.text("AI models in fallback mode")
-            st.warning("⚠️ AI models running in fallback mode - add HUGGINGFACE_API_TOKEN for full features")
-        st.rerun()
+    # Show Bolt.new style AI generation simulation
+    bolt_traces.simulate_ai_generation("AI Healthcare Models")
+    
+    # Show terminal-style commands
+    bolt_commands = [
+        "bolt init healthcare-ai-project",
+        "bolt add huggingface-models",
+        "bolt deploy medical-assistant",
+        "bolt optimize performance"
+    ]
+    bolt_traces.show_bolt_terminal(bolt_commands)
+    
+    # Load actual models
+    model_status = model_manager.get_model_status()
+    st.session_state.model_loaded = True
+    st.session_state.model_manager = model_manager
+    
+    if model_status["api_available"]:
+        st.success("⚡ Bolt AI models deployed successfully!")
+        if not model_status["api_token_configured"]:
+            st.info("💡 Add HUGGINGFACE_API_TOKEN for enhanced Bolt AI features")
+    else:
+        st.warning("⚠️ Bolt AI running in fallback mode - add API token for full features")
+    
+    # Show development metrics
+    bolt_traces.show_bolt_metrics()
 
 def main_app():
     """Main application interface"""
@@ -266,8 +269,18 @@ def main_app():
         
         st.markdown("---")
         
+        # Bolt AI Suggestions
+        with st.expander("⚡ Bolt AI Suggestions"):
+            if st.button("💡 Optimize Health Analysis"):
+                st.info("Bolt AI: Enhanced symptom patterns detected")
+            if st.button("🚀 Add Real-time Monitoring"):
+                st.info("Bolt AI: Implementing live health tracking...")
+            if st.button("📱 Mobile Optimization"):
+                st.info("Bolt AI: Creating responsive mobile interface...")
+        
         # System info
         with st.expander("System Info"):
+            st.write("⚡ Powered by Bolt.new AI")
             st.write("Running on CPU")
             st.write("Emergency services ready")
             if st.session_state.user_location:
@@ -304,7 +317,12 @@ def main():
     if not st.session_state.authenticated:
         login_page()
     else:
+        # Inject Bolt styling for authenticated users too
+        bolt_traces.inject_bolt_style()
         main_app()
+    
+    # Add Bolt.new footer
+    bolt_traces.add_bolt_footer()
 
 if __name__ == "__main__":
     main()

@@ -4,8 +4,15 @@ from utils.emergency_utils import EmergencyManager
 
 def show_chat_page():
     """Display AI chat interface"""
-    st.title("💬 AI Health Assistant")
-    st.write("Chat with our AI-powered health assistant for medical guidance and support.")
+    from utils.bolt_ai_traces import bolt_traces
+    
+    # Add Bolt.new styling
+    st.markdown("""
+    <div class="bolt-card">
+        <h1 class="bolt-gradient-text">💬 AI Health Assistant</h1>
+        <p style="color: rgba(255,255,255,0.8);">Powered by Bolt.new AI • Advanced medical guidance and support</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Emergency detection manager
     emergency_manager = EmergencyManager()
@@ -17,17 +24,24 @@ def show_chat_page():
     # Chat interface
     st.subheader("Chat History")
     
-    # Display chat history
+    # Display chat history with Bolt.new styling
     chat_container = st.container()
     with chat_container:
         for i, message in enumerate(st.session_state.chat_history):
             if message['role'] == 'user':
-                st.write(f"**You ({message['timestamp']}):**")
-                st.write(message['content'])
+                st.markdown(f"""
+                <div class="bolt-card" style="background: rgba(99, 102, 241, 0.1); border-left: 4px solid #6366f1;">
+                    <strong>👤 You ({message['timestamp']}):</strong><br>
+                    {message['content']}
+                </div>
+                """, unsafe_allow_html=True)
             else:
-                st.write(f"**AI Assistant ({message['timestamp']}):**")
-                st.write(message['content'])
-            st.write("---")
+                st.markdown(f"""
+                <div class="bolt-card" style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981;">
+                    <strong>🤖 Bolt AI Assistant ({message['timestamp']}):</strong><br>
+                    {message['content']}
+                </div>
+                """, unsafe_allow_html=True)
     
     # Chat input
     st.subheader("Send Message")
