@@ -260,11 +260,12 @@ def main_app():
                 "🔍 Symptom Checker": "symptom_checker"
             }
         
-        # Default to emergency page if in emergency mode
+        # Navigation with emergency indicator
         if st.session_state.emergency_mode:
-            selected_page = "🚨 Emergency Response"
-        else:
-            selected_page = st.selectbox("Navigate to:", list(pages.keys()))
+            st.error("🚨 EMERGENCY MODE ACTIVE")
+            
+        selected_page = st.selectbox("Navigate to:", list(pages.keys()), 
+                                   index=0 if st.session_state.emergency_mode else 0)
         
         page_key = pages[selected_page]
         
