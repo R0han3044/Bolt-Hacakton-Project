@@ -15,14 +15,14 @@ class BoltAITraces:
     
     def __init__(self):
         self.bolt_colors = {
-            "primary": "#6366f1",
-            "secondary": "#8b5cf6", 
-            "accent": "#06b6d4",
-            "success": "#10b981",
-            "warning": "#f59e0b",
-            "error": "#ef4444",
-            "background": "#0f172a",
-            "surface": "#1e293b"
+            "primary": "#2563eb",
+            "secondary": "#7c3aed", 
+            "accent": "#0891b2",
+            "success": "#059669",
+            "warning": "#d97706",
+            "error": "#dc2626",
+            "background": "#ffffff",
+            "surface": "#f8fafc"
         }
         
         self.ai_models = [
@@ -45,40 +45,41 @@ class BoltAITraces:
         """Inject Bolt.new style CSS into the app"""
         st.markdown("""
         <style>
-        /* Bolt.new Modern UI Styling */
+        /* Bolt.new Light Mode UI Styling */
         .stApp {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            color: #1f2937;
         }
         
         .bolt-header {
-            background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+            background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%);
             padding: 1rem;
             border-radius: 12px;
             margin-bottom: 1rem;
-            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.2);
         }
         
         .bolt-card {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(248, 250, 252, 0.9);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.2);
             border-radius: 12px;
             padding: 1.5rem;
             margin: 1rem 0;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
         
         .bolt-ai-badge {
             display: inline-flex;
             align-items: center;
-            background: linear-gradient(45deg, #06b6d4, #10b981);
+            background: linear-gradient(45deg, #0891b2, #059669);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.875rem;
             font-weight: 600;
             margin: 0.25rem;
-            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
+            box-shadow: 0 2px 8px rgba(8, 145, 178, 0.3);
         }
         
         .bolt-status {
@@ -86,8 +87,8 @@ class BoltAITraces:
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem;
-            background: rgba(16, 185, 129, 0.1);
-            border-left: 4px solid #10b981;
+            background: rgba(5, 150, 105, 0.1);
+            border-left: 4px solid #059669;
             border-radius: 0 8px 8px 0;
             margin: 0.5rem 0;
         }
@@ -95,7 +96,7 @@ class BoltAITraces:
         .bolt-pulse {
             width: 8px;
             height: 8px;
-            background: #10b981;
+            background: #059669;
             border-radius: 50%;
             animation: pulse 2s infinite;
         }

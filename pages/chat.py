@@ -30,14 +30,14 @@ def show_chat_page():
         for i, message in enumerate(st.session_state.chat_history):
             if message['role'] == 'user':
                 st.markdown(f"""
-                <div class="bolt-card" style="background: rgba(99, 102, 241, 0.1); border-left: 4px solid #6366f1;">
+                <div class="bolt-card" style="background: rgba(37, 99, 235, 0.1); border-left: 4px solid #2563eb; color: #1f2937;">
                     <strong>👤 You ({message['timestamp']}):</strong><br>
                     {message['content']}
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                <div class="bolt-card" style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981;">
+                <div class="bolt-card" style="background: rgba(5, 150, 105, 0.1); border-left: 4px solid #059669; color: #1f2937;">
                     <strong>🤖 Bolt AI Assistant ({message['timestamp']}):</strong><br>
                     {message['content']}
                 </div>
@@ -82,6 +82,9 @@ def show_chat_page():
                 st.session_state.emergency_mode = True
                 emergency_manager.activate_emergency_mode(severity_assessment)
                 st.error("🚨 EMERGENCY DETECTED - Switching to emergency mode!")
+                
+                # Show emergency hospital calling options
+                show_emergency_hospital_calling(emergency_manager)
             
             st.rerun()
         
@@ -211,3 +214,109 @@ def generate_ai_response(user_message, severity_assessment=None):
     response += "Could you please provide more details about your health question or concern?"
     
     return response
+
+
+def show_emergency_hospital_calling(emergency_manager):
+    """Show emergency hospital calling interface when dangerous symptoms detected"""
+    from utils.location_utils import LocationManager
+    
+    st.error("🚨 DANGEROUS SYMPTOMS DETECTED - IMMEDIATE MEDICAL ATTENTION REQUIRED")
+    
+    location_manager = LocationManager()
+    
+    # Get nearest hospitals
+    try:
+        hospitals = location_manager.find_nearby_facilities("hospitals", 15)
+        emergency_hospitals = [h for h in hospitals if h.get('emergency_room', False)]
+        
+        if emergency_hospitals:
+            closest_hospital = emergency_hospitals[0]
+            
+            st.markdown(f"""
+            <div class="bolt-card" style="background: rgba(220, 38, 38, 0.1); border-left: 4px solid #dc2626;">
+                <h3 style="color: #dc2626;">🏥 NEAREST EMERGENCY HOSPITAL</h3>
+                <p><strong>Name:</strong> {closest_hospital['name']}</p>
+                <p><strong>Address:</strong> {closest_hospital['address']}</p>
+                <p><strong>Phone:</strong> {closest_hospital['phone']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                if st.button("🚨 CALL HOSPITAL NOW", type="primary", key="emergency_call_hospital"):
+                    st.error(f"CALLING {closest_hospital['name']}...")
+                    st.info(f"Dial: {closest_hospital['phone']}")
+                    emergency_manager.call_emergency_services()
+            
+            with col2:
+                if st.button("📞 CALL 911", type="secondary", key="emergency_call_911"):
+                    st.error("CALLING 911...")
+                    st.info("Emergency services contacted")
+                    emergency_manager.call_emergency_services()
+            
+            with col3:
+                if st.button("🗺️ SHOW MAP", key="emergency_show_map"):
+                    show_emergency_map_quick(emergency_hospitals[:3])
+        
+        else:
+            # No hospitals found, show 911 option
+            st.error("No nearby hospitals found - CALL 911 IMMEDIATELY")
+            if st.button("📞 CALL 911 NOW", type="primary", key="emergency_911_only"):
+                st.error("CALLING 911...")
+                emergency_manager.call_emergency_services()
+    
+    except Exception as e:
+        st.error("Error finding hospitals - CALL 911 IMMEDIATELY")
+        if st.button("📞 CALL 911", type="primary", key="emergency_fallback_911"):
+            st.error("CALLING 911...")
+            emergency_manager.call_emergency_services()
+    
+    # Emergency instructions
+    st.warning("""
+    **EMERGENCY INSTRUCTIONS:**
+    - Stay calm and call for help immediately
+    - If symptoms worsen, call 911
+    - Do not drive yourself to the hospital
+    - Have someone stay with you if possible
+    - Follow any instructions from medical professionals
+    """)
+
+
+def show_emergency_map_quick(hospitals):
+    """Show quick emergency map"""
+    import folium
+    from streamlit_folium import st_folium
+    
+    st.subheader("🗺️ Emergency Hospitals Near You")
+    
+    # Create simple emergency map
+    if hospitals:
+        center_lat = hospitals[0]['coordinates']['lat']
+        center_lng = hospitals[0]['coordinates']['lng']
+        
+        m = folium.Map(
+            location=[center_lat, center_lng],
+            zoom_start=13,
+            tiles="OpenStreetMap"
+        )
+        
+        for hospital in hospitals:
+            folium.Marker(
+                [hospital['coordinates']['lat'], hospital['coordinates']['lng']],
+                popup=f"""
+                <div>
+                    <h4>{hospital['name']}</h4>
+                    <p>{hospital['address']}</p>
+                    <p>📞 {hospital['phone']}</p>
+                    <button onclick="window.open('tel:{hospital['phone']}', '_self')" 
+                            style="background: #dc2626; color: white; border: none; padding: 8px; border-radius: 4px;">
+                        🚨 EMERGENCY CALL
+                    </button>
+                </div>
+                """,
+                tooltip=f"🚨 {hospital['name']} - EMERGENCY",
+                icon=folium.Icon(color='red', icon='plus', prefix='fa')
+            ).add_to(m)
+        
+        st_folium(m, width=700, height=400)

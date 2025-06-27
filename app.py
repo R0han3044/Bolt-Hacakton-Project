@@ -241,6 +241,7 @@ def main_app():
         # Navigation
         pages = {
             "🚨 Emergency Response": "emergency",
+            "🏥 Hospital Finder": "hospital_finder",
             "💬 AI Chat": "chat",
             "🔍 Symptom Checker": "symptom_checker",
             "📊 Wellness Dashboard": "wellness",
@@ -297,6 +298,9 @@ def main_app():
     # Main content area
     if page_key == "emergency":
         emergency_page.show_emergency_response()
+    elif page_key == "hospital_finder":
+        import pages.hospital_finder as hospital_page
+        hospital_page.show_hospital_finder()
     elif page_key == "chat":
         chat_page.show_chat_page()
     elif page_key == "symptom_checker":
