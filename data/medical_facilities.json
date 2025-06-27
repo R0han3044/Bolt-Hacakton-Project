@@ -1,0 +1,122 @@
+{
+  "hospitals": [
+    {
+      "id": "hosp_001",
+      "name": "City General Hospital",
+      "address": "123 Main St, Downtown",
+      "phone": "+1-555-0123",
+      "coordinates": {"lat": 40.7128, "lng": -74.0060},
+      "emergency_room": true,
+      "trauma_center": true,
+      "specialties": ["Emergency Medicine", "Cardiology", "Neurology"],
+      "rating": 4.5,
+      "hours": "24/7"
+    },
+    {
+      "id": "hosp_002",
+      "name": "Regional Medical Center",
+      "address": "456 Oak Ave, Midtown",
+      "phone": "+1-555-0456",
+      "coordinates": {"lat": 40.7580, "lng": -73.9855},
+      "emergency_room": true,
+      "trauma_center": false,
+      "specialties": ["Emergency Medicine", "Orthopedics", "Pediatrics"],
+      "rating": 4.2,
+      "hours": "24/7"
+    },
+    {
+      "id": "hosp_003",
+      "name": "University Hospital",
+      "address": "789 College Blvd, University District",
+      "phone": "+1-555-0789",
+      "coordinates": {"lat": 40.6892, "lng": -74.0445},
+      "emergency_room": true,
+      "trauma_center": true,
+      "specialties": ["Emergency Medicine", "Surgery", "Oncology"],
+      "rating": 4.7,
+      "hours": "24/7"
+    },
+    {
+      "id": "hosp_004",
+      "name": "Children's Medical Center",
+      "address": "321 Pine St, Westside",
+      "phone": "+1-555-0321",
+      "coordinates": {"lat": 40.7200, "lng": -74.0100},
+      "emergency_room": true,
+      "trauma_center": false,
+      "specialties": ["Pediatric Emergency", "Pediatrics", "Neonatal Care"],
+      "rating": 4.8,
+      "hours": "24/7"
+    }
+  ],
+  "pharmacies": [
+    {
+      "id": "pharm_001",
+      "name": "Downtown Pharmacy",
+      "address": "100 Main St, Downtown",
+      "phone": "+1-555-1000",
+      "coordinates": {"lat": 40.7138, "lng": -74.0070},
+      "hours": "24/7",
+      "services": ["Prescription", "Over-the-counter", "Vaccinations", "Emergency refills"]
+    },
+    {
+      "id": "pharm_002",
+      "name": "MediMart Express",
+      "address": "500 Oak Ave, Midtown",
+      "phone": "+1-555-1001",
+      "coordinates": {"lat": 40.7590, "lng": -73.9865},
+      "hours": "6 AM - 12 AM",
+      "services": ["Prescription", "Over-the-counter", "Health screenings", "Flu shots"]
+    },
+    {
+      "id": "pharm_003",
+      "name": "University Pharmacy",
+      "address": "800 College Blvd, University District",
+      "phone": "+1-555-1002",
+      "coordinates": {"lat": 40.6900, "lng": -74.0450},
+      "hours": "8 AM - 10 PM",
+      "services": ["Prescription", "Over-the-counter", "Student health", "Insurance billing"]
+    },
+    {
+      "id": "pharm_004",
+      "name": "24-Hour Emergency Pharmacy",
+      "address": "150 Emergency Blvd, Central",
+      "phone": "+1-555-1003",
+      "coordinates": {"lat": 40.7300, "lng": -74.0200},
+      "hours": "24/7",
+      "services": ["Emergency prescriptions", "All medications", "Medical supplies", "Consultations"]
+    }
+  ],
+  "urgent_care": [
+    {
+      "id": "urgent_001",
+      "name": "QuickCare Clinic",
+      "address": "200 Pine St, Westside",
+      "phone": "+1-555-2000",
+      "coordinates": {"lat": 40.7200, "lng": -74.0100},
+      "hours": "8 AM - 10 PM",
+      "wait_time": "15 minutes",
+      "services": ["Minor injuries", "Illness", "X-rays", "Lab work"]
+    },
+    {
+      "id": "urgent_002",
+      "name": "Express Medical Care",
+      "address": "300 Broadway, Downtown",
+      "phone": "+1-555-2001",
+      "coordinates": {"lat": 40.7150, "lng": -74.0080},
+      "hours": "7 AM - 11 PM",
+      "wait_time": "20 minutes",
+      "services": ["Urgent care", "Occupational medicine", "Travel medicine", "Physical exams"]
+    },
+    {
+      "id": "urgent_003",
+      "name": "Neighborhood Urgent Care",
+      "address": "600 Oak Ave, Midtown",
+      "phone": "+1-555-2002",
+      "coordinates": {"lat": 40.7600, "lng": -73.9870},
+      "hours": "9 AM - 9 PM",
+      "wait_time": "25 minutes",
+      "services": ["Walk-in care", "Minor procedures", "Vaccinations", "Sports physicals"]
+    }
+  ]
+}

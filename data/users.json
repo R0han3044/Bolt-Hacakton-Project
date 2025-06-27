@@ -1,0 +1,47 @@
+{
+  "admin": {
+    "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "role": "admin",
+    "created_at": "2025-06-27T10:00:00",
+    "emergency_contacts": [
+      {
+        "name": "Admin Emergency Contact",
+        "phone": "+1234567890",
+        "relationship": "System Administrator",
+        "email": "admin@healthassist.ai"
+      }
+    ]
+  },
+  "doctor": {
+    "password_hash": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
+    "role": "doctor",
+    "created_at": "2025-06-27T10:00:00",
+    "emergency_contacts": [
+      {
+        "name": "Medical Emergency Line",
+        "phone": "+1234567891",
+        "relationship": "Hospital",
+        "email": "emergency@hospital.com"
+      }
+    ]
+  },
+  "patient": {
+    "password_hash": "ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270",
+    "role": "patient",
+    "created_at": "2025-06-27T10:00:00",
+    "emergency_contacts": [
+      {
+        "name": "Emergency Contact",
+        "phone": "+1234567892",
+        "relationship": "Family",
+        "email": "family@example.com"
+      },
+      {
+        "name": "Backup Contact",
+        "phone": "+1234567893",
+        "relationship": "Friend",
+        "email": "friend@example.com"
+      }
+    ]
+  }
+}
