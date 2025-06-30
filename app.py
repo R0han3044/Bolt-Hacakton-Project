@@ -1,3 +1,5 @@
+from utils.db import init_db
+
 import streamlit as st
 
 # Set page configuration first before any other Streamlit commands
@@ -215,6 +217,8 @@ def main_app():
     
     # Sidebar navigation
     with st.sidebar:
+        # Hide Streamlit's default multipage navigation and logo/sidebar header
+        
         st.title("🏥 HealthAssist AI")
         st.write(f"Welcome, {st.session_state.username}!")
         if st.session_state.user_role != "emergency":
@@ -263,9 +267,11 @@ def main_app():
         # Navigation with emergency indicator
         if st.session_state.emergency_mode:
             st.error("🚨 EMERGENCY MODE ACTIVE")
+            if st.button("❌ Exit Emergency Mode", key="exit_emergency"):
+                st.session_state.emergency_mode = False
+                st.rerun()
             
-        selected_page = st.selectbox("Navigate to:", list(pages.keys()), 
-                                   index=0 if st.session_state.emergency_mode else 0)
+        selected_page = st.selectbox("Navigate to:", list(pages.keys()))
         
         page_key = pages[selected_page]
         
@@ -315,6 +321,9 @@ def main_app():
 
 def main():
     """Main application entry point"""
+    # Initialize database
+    init_db()
+
     # Initialize session state
     initialize_session_state()
     

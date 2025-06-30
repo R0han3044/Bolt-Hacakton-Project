@@ -1,92 +1,109 @@
-import json
 import hashlib
-import os
 from datetime import datetime
+import json
+from utils.db import SessionLocal, User, EmergencyContact
+from sqlalchemy.orm import Session
 
 class AuthManager:
     def __init__(self):
-        self.users_file = "data/users.json"
-        self.ensure_data_directory()
-        self.load_users()
-    
-    def ensure_data_directory(self):
-        """Ensure data directory exists"""
-        os.makedirs("data", exist_ok=True)
-    
-    def load_users(self):
-        """Load users from JSON file"""
-        try:
-            with open(self.users_file, 'r') as f:
-                self.users = json.load(f)
-        except FileNotFoundError:
-            # Create default users
-            self.users = {
-                "admin": {
-                    "password_hash": self.hash_password("admin123"),
-                    "role": "admin",
-                    "created_at": datetime.now().isoformat(),
-                    "emergency_contacts": []
-                },
-                "doctor": {
-                    "password_hash": self.hash_password("doctor123"),
-                    "role": "doctor",
-                    "created_at": datetime.now().isoformat(),
-                    "emergency_contacts": []
-                },
-                "patient": {
-                    "password_hash": self.hash_password("patient123"),
-                    "role": "patient",
-                    "created_at": datetime.now().isoformat(),
-                    "emergency_contacts": [
-                        {"name": "Emergency Contact", "phone": "+1234567890", "relationship": "Family"}
-                    ]
-                }
-            }
-            self.save_users()
-    
-    def save_users(self):
-        """Save users to JSON file"""
-        with open(self.users_file, 'w') as f:
-            json.dump(self.users, f, indent=2)
-    
+        self.db: Session = SessionLocal()
+        self.ensure_default_users()
+
     def hash_password(self, password):
         """Hash password using SHA256"""
         return hashlib.sha256(password.encode()).hexdigest()
-    
+
+    def ensure_default_users(self):
+        """Ensure default users exist in the database"""
+        default_users = [
+            {
+                "username": "admin",
+                "password": "admin123",
+                "role": "admin",
+                "emergency_contacts": []
+            },
+            {
+                "username": "doctor",
+                "password": "doctor123",
+                "role": "doctor",
+                "emergency_contacts": []
+            },
+            {
+                "username": "patient",
+                "password": "patient123",
+                "role": "patient",
+                "emergency_contacts": [
+                    {"name": "Emergency Contact", "phone": "+1234567890", "relationship": "Family"}
+                ]
+            }
+        ]
+        for user_data in default_users:
+            user = self.db.query(User).filter(User.username == user_data["username"]).first()
+            if not user:
+                user = User(
+                    username=user_data["username"],
+                    password_hash=self.hash_password(user_data["password"]),
+                    role=user_data["role"],
+                    created_at=datetime.utcnow()
+                )
+                self.db.add(user)
+                self.db.commit()
+                self.db.refresh(user)
+                for contact in user_data["emergency_contacts"]:
+                    ec = EmergencyContact(
+                        user_id=user.id,
+                        name=contact["name"],
+                        phone=contact["phone"],
+                        relationship=contact.get("relationship")
+                    )
+                    self.db.add(ec)
+                self.db.commit()
+
     def authenticate(self, username, password):
         """Authenticate user"""
-        if username in self.users:
-            password_hash = self.hash_password(password)
-            return self.users[username]["password_hash"] == password_hash
+        user = self.db.query(User).filter(User.username == username).first()
+        if user:
+            return user.password_hash == self.hash_password(password)
         return False
-    
+
     def get_user_role(self, username):
         """Get user role"""
-        if username in self.users:
-            return self.users[username]["role"]
+        user = self.db.query(User).filter(User.username == username).first()
+        if user:
+            return user.role
         return None
-    
+
     def get_emergency_contacts(self, username):
         """Get emergency contacts for user"""
-        if username in self.users:
-            return self.users[username].get("emergency_contacts", [])
+        user = self.db.query(User).filter(User.username == username).first()
+        if user:
+            return [
+                {"name": ec.name, "phone": ec.phone, "relationship": ec.relationship}
+                for ec in user.emergency_contacts
+            ]
         return []
-    
+
     def add_emergency_contact(self, username, contact):
         """Add emergency contact for user"""
-        if username in self.users:
-            if "emergency_contacts" not in self.users[username]:
-                self.users[username]["emergency_contacts"] = []
-            self.users[username]["emergency_contacts"].append(contact)
-            self.save_users()
+        user = self.db.query(User).filter(User.username == username).first()
+        if user:
+            ec = EmergencyContact(
+                user_id=user.id,
+                name=contact.get("name"),
+                phone=contact.get("phone"),
+                relationship=contact.get("relationship")
+            )
+            self.db.add(ec)
+            self.db.commit()
             return True
         return False
-    
+
     def remove_emergency_contact(self, username, contact_index):
         """Remove emergency contact for user"""
-        if username in self.users and "emergency_contacts" in self.users[username]:
-            if 0 <= contact_index < len(self.users[username]["emergency_contacts"]):
-                del self.users[username]["emergency_contacts"][contact_index]
-                self.save_users()
-                return True
+        user = self.db.query(User).filter(User.username == username).first()
+        if user and 0 <= contact_index < len(user.emergency_contacts):
+            ec = user.emergency_contacts[contact_index]
+            self.db.delete(ec)
+            self.db.commit()
+            return True
         return False
